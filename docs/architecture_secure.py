@@ -23,20 +23,20 @@ with Diagram(
 
         with Cluster("VPC multi-couches"):
 
-            with Cluster("Subnets Publics — ALB uniquement"):
-                alb = ELB("Application Load Balancer\n✓ HTTPS uniquement")
+            with Cluster("Subnets Publics, ALB uniquement"):
+                alb = ELB("Application Load Balancer\nHTTPS uniquement")
 
             with Cluster("Subnets Privés — Applicatif"):
-                ec2  = EC2("EC2 App\n✓ Subnet privé\n✓ EBS chiffré KMS\n✓ Pas de SSH")
-                ssm  = SystemsManager("SSM Session Manager\n✓ Accès de gestion sans SSH")
-                iam  = IAM("IAM Role\n✓ Moindre privilège")
-                sm   = SecretsManager("Secrets Manager\n✓ Credentials RDS")
+                ec2  = EC2("EC2 App\nSubnet privé\nEBS chiffré KMS\nPas de SSH")
+                ssm  = SystemsManager("SSM Session Manager\nAccès de gestion sans SSH")
+                iam  = IAM("IAM Role\nMoindre privilège")
+                sm   = SecretsManager("Secrets Manager\nCredentials RDS")
 
-            with Cluster("Subnets Privés — Base de données"):
-                rds = RDS("RDS MySQL\n✓ Chiffrée KMS\n✓ Multi-AZ\n✓ Non publique")
+            with Cluster("Subnets Privés, Base de données"):
+                rds = RDS("RDS MySQL\nChiffrée KMS\nMulti-AZ\nNon publique")
 
             with Cluster("S3 Privé"):
-                s3 = S3("S3 Dossiers\n✓ Accès public bloqué\n✓ Chiffrement SSE-KMS")
+                s3 = S3("S3 Dossiers\nAccès public bloqué\nChiffrement SSE-KMS")
 
     internet >> igw >> alb >> ec2
     ec2 >> rds

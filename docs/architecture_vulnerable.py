@@ -36,10 +36,10 @@ with Diagram(
         igw = InternetGateway("Internet\nGateway")
 
         with Cluster("VPC - Subnet PUBLIC uniquement\n(aucune separation reseau)"):
-            ec2 = EC2("EC2 App\n[FAILLE] IP publique directe\n[FAILLE] SSH ouvert 0.0.0.0/0\n[FAILLE] EBS non chiffre")
-            rds = RDS("RDS MySQL\n[FAILLE] Accessible publiquement\n[FAILLE] Non chiffree\n[FAILLE] Pas de Multi-AZ")
-            s3  = S3("S3\n[FAILLE] Acces public non bloque\n[FAILLE] Pas de chiffrement")
-            iam = IAM("IAM Role\n[FAILLE] AdministratorAccess")
+            ec2 = EC2("EC2 App\nFaille : IP publique directe\nFaille : SSH ouvert 0.0.0.0/0\nFaille : EBS non chiffre")
+            rds = RDS("RDS MySQL\nFaille : Accessible publiquement\nFaille : Non chiffree\nFaille : Pas de Multi-AZ")
+            s3  = S3("S3\nFaille : Acces public non bloque\nFaille : Pas de chiffrement")
+            iam = IAM("IAM Role\nFaille : AdministratorAccess")
 
         # CloudTrail absent intentionnellement
 
