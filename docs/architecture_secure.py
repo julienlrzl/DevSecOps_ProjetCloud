@@ -1,0 +1,48 @@
+from diagrams import Diagram, Cluster, Edge
+from diagrams.aws.network import InternetGateway, ELB, VPC
+from diagrams.aws.compute import EC2
+from diagrams.aws.database import RDS
+from diagrams.aws.storage import S3
+from diagrams.aws.security import IAM, KMS, SecretsManager
+from diagrams.aws.management import Cloudtrail, SystemsManager
+from diagrams.onprem.client import Users
+
+# Génère : architecture_secure.png
+with Diagram(
+    "IaaS Sécurisée — Dossiers Médicaux",
+    filename="docs/architecture_secure",
+    show=False,
+    direction="TB"
+):
+    internet = Users("Utilisateurs")
+
+    with Cluster("AWS ca-central-1"):
+        igw = InternetGateway("Internet Gateway")
+        kms = KMS("KMS\n(chiffrement S3, RDS, EBS)")
+        cloudtrail = Cloudtrail("CloudTrail\n(audit complet)")
+
+        with Cluster("VPC multi-couches"):
+
+            with Cluster("Subnets Publics — ALB uniquement"):
+                alb = ELB("Application Load Balancer\n✓ HTTPS uniquement")
+
+            with Cluster("Subnets Privés — Applicatif"):
+                ec2  = EC2("EC2 App\n✓ Subnet privé\n✓ EBS chiffré KMS\n✓ Pas de SSH")
+                ssm  = SystemsManager("SSM Session Manager\n✓ Accès de gestion sans SSH")
+                iam  = IAM("IAM Role\n✓ Moindre privilège")
+                sm   = SecretsManager("Secrets Manager\n✓ Credentials RDS")
+
+            with Cluster("Subnets Privés — Base de données"):
+                rds = RDS("RDS MySQL\n✓ Chiffrée KMS\n✓ Multi-AZ\n✓ Non publique")
+
+            with Cluster("S3 Privé"):
+                s3 = S3("S3 Dossiers\n✓ Accès public bloqué\n✓ Chiffrement SSE-KMS")
+
+    internet >> igw >> alb >> ec2
+    ec2 >> rds
+    ec2 >> sm
+    ec2 - ssm
+    ec2 - iam
+    s3 - kms
+    rds - kms
+    cloudtrail >> s3
