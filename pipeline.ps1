@@ -1,10 +1,7 @@
 $ErrorActionPreference = "Continue"
 $InitialPath = Get-Location
 
-
 Write-Host "DÉMARRAGE DU PIPELINE DEVSECOPS"
-
-
 
 #DOCKER
 Write-Host "Construction de l'image Docker"
@@ -17,7 +14,7 @@ trivy image api-medicale-secure:latest
 
 #CHECKOV
 Write-Host "Audit de l'infrastructure Terraform avec Checkov"
-Set-Location -Path "terraform_PaaS"
+Set-Location -Path "docker\secure\terraform_PaaS"
 checkov -d .
 
 # Retour au dossier initial
