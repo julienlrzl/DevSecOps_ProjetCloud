@@ -3,12 +3,14 @@ import os
 
 app = Flask(__name__)
 
-# Mauvaise pratique : mot de passe en dur
-DB_PASSWORD = os.environ.get("DB_PASSWORD", "SuperSecretAdmin123!")
+# Bonne pratique : lecture depuis variable d'environnement, sans valeur par défaut
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+if not DB_PASSWORD:
+    raise RuntimeError("La variable d'environnement DB_PASSWORD est requise")
 
 @app.route('/')
 def home():
-    return "Bienvenue sur l'API des Dossiers Médicaux (Version Vulnérable)"
+    return "Bienvenue sur l'API des Dossiers Médicaux (Version Sécurisée)"
 
 @app.route('/patients')
 def get_patients():
@@ -18,4 +20,4 @@ def get_patients():
     ])
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
